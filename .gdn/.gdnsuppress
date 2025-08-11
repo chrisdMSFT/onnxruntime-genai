@@ -1,0 +1,44 @@
+{
+  "hydrated": true,
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/suppressions"
+  },
+  "version": "1.0.0",
+  "suppressionSets": {
+    "default": {
+      "name": "default",
+      "createdDate": "2025-05-09 17:20:03Z",
+      "lastUpdatedDate": "2025-05-09 17:20:03Z"
+    }
+  },
+  "results": {
+    "18184f9f5e475d1f25646b96f3d850aeccd8a8c536fe66714222e04e6ee0e710": {
+      "signature": "18184f9f5e475d1f25646b96f3d850aeccd8a8c536fe66714222e04e6ee0e710",
+      "alternativeSignatures": [
+        "4a909b42eed5c22eb31cb79861167b374f0ef84f41fa9e45d3b10c8ca610be20"
+      ],
+      "target": "external-tools/gdn-azure-cli-2.72.0-x64.zip/Lib/site-packages/azure/cli/command_modules/servicefabric/template/linux/template.json",
+      "line": 263,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "armory",
+      "ruleId": "ARM1005",
+      "createdDate": "2025-05-09 17:20:03Z"
+    },
+    "faf5f291cb53b8cdaf10b729d40dc112d64874901f33902a6246920dc1772d3f": {
+      "signature": "faf5f291cb53b8cdaf10b729d40dc112d64874901f33902a6246920dc1772d3f",
+      "alternativeSignatures": [
+        "f66fb9b9fca919178b81fd637e6253a2a5886f538f304edc343b5f2b28a7deb6"
+      ],
+      "target": "external-tools/gdn-azure-cli-2.72.0-x64.zip/Lib/site-packages/azure/cli/command_modules/servicefabric/template/windows/template.json",
+      "line": 256,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "armory",
+      "ruleId": "ARM1005",
+      "createdDate": "2025-05-09 17:20:03Z"
+    }
+  }
+}
