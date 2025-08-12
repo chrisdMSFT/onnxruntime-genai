@@ -42,12 +42,10 @@ if(USE_WINML)
   # Download the ORT used by WCR
   include(cmake/dependencies.cmake)
 
-  # Release Notes - https://microsoft.visualstudio.com/ProjectOxford/_wiki/wikis/ProjectOxford.wiki/296384/2025-8-12
-  # Verify [non-]breaking ORT change and version with Microsoft.WindowsAppSDK.ML in winml-nuget-packagingi-job.yml.
-  # 1.23.25-202508042339 - is [1.8.1001,1.8.2000] ?
+  # Release Notes - https://microsoft.visualstudio.com/ProjectOxford/_wiki/wikis/ProjectOxford.wiki/296520/2508-19
   az_download_dependency(
     NAME win-onnxruntime-sdk
-    VERSION 1.23.25-202508080155
+    VERSION 1.23.25-202508112028
     ORGANIZATION https://dev.azure.com/WSSI/
     PROJECT COMPUTE
     SCOPE project
