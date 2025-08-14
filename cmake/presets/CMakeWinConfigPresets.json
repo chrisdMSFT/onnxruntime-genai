@@ -12,7 +12,8 @@
         "USE_CUDA": "OFF",
         "USE_ROCM": "OFF",
         "USE_GUIDANCE": "ON",
-        "USE_WINML": "ON"
+        "USE_WINML": "ON",
+        "USE_DML": "ON"
       },
       "condition": {
         "type": "equals",
