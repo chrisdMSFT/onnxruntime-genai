@@ -45,7 +45,7 @@ if(USE_WINML)
   # Release Notes - https://microsoft.visualstudio.com/ProjectOxford/_wiki/wikis/ProjectOxford.wiki/296520/2508-19
   az_download_dependency(
     NAME win-onnxruntime-sdk
-    VERSION 1.23.25-202508112028
+    VERSION 1.23.25-alpha-202508252126
     ORGANIZATION https://dev.azure.com/WSSI/
     PROJECT COMPUTE
     SCOPE project
