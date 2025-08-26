@@ -4,6 +4,11 @@ parameters:
   type: boolean
   default: false
 
+- name: enable_winml
+  displayName: 'Whether WinML support is on for Windows builds.'
+  type: boolean
+  default: false
+
 - name: enable_win_cpu
   displayName: 'Whether Windows CPU package is built.'
   type: boolean
@@ -97,6 +102,7 @@ extends:
         enable_macos_cpu: ${{ parameters.enable_macos_cpu }}
         cuda_versions: ${{ parameters.cuda_versions }}
         build_config: ${{ parameters.build_config }}
+        enable_winml: ${{ parameters.enable_winml }}
     - ${{ if eq(parameters.enable_post_packaging_validation, true) }}:
       - template: stages/py-validation-stage.yml
         parameters:

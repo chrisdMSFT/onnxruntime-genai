@@ -1,4 +1,6 @@
 parameters:
+- name: enable_winml
+  type: boolean
 - name: enable_win_cpu
   type: boolean
 - name: enable_win_cuda
@@ -42,6 +44,7 @@ stages:
         ort_version: ${{ parameters.ort_version }}
         os: 'win'
         build_config: ${{ parameters.build_config }}
+        enable_winml: ${{ parameters.enable_winml }}
 
   - ${{ if eq(parameters.enable_win_arm64, true) }}:
     - template: jobs/capi-packaging-job.yml
