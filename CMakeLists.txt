@@ -14,6 +14,73 @@ project(Generators LANGUAGES C CXX)
 # All Options should be defined in cmake/options.cmake This must be included before any other cmake file is included
 include(cmake/options.cmake)
 
+if(USE_WINML)
+  message(STATUS "CMAKE_GENERATOR_PLATFORM: ${CMAKE_GENERATOR_PLATFORM}")
+
+  if(CMAKE_GENERATOR_PLATFORM STREQUAL "x64")
+      set(ORT_PLATFORM "x64")
+  elseif(CMAKE_GENERATOR_PLATFORM STREQUAL "arm64" OR CMAKE_GENERATOR_PLATFORM STREQUAL "arm64X" OR CMAKE_GENERATOR_PLATFORM STREQUAL "arm64EC")
+      set(ORT_PLATFORM "ARM64")
+  else()
+      message(FATACMAKE_GENERATOR_PLATFORML_ERROR "Unsupported platform for GenAI: ${CMAKE_GENERATOR_PLATFORM}")
+      return()
+  endif()
+
+  if("${CMAKE_BUILD_TYPE}" MATCHES "Rel")
+    set(ORT_FLAVOR "Release")
+  else()
+    set(ORT_FLAVOR "Debug")
+  endif()
+
+  message(STATUS "ORT_FLAVOR: ${ORT_FLAVOR}")
+  message(STATUS "ORT_PLATFORM: ${ORT_PLATFORM}")
+  message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+
+  # Download and use the NUGET
+  include(cmake/nuget.cmake)
+
+  # Download the ORT used by WCR
+  include(cmake/dependencies.cmake)
+
+  # Release Notes - https://microsoft.visualstudio.com/ProjectOxford/_wiki/wikis/ProjectOxford.wiki/296520/2508-19
+  az_download_dependency(
+    NAME win-onnxruntime-sdk
+    VERSION 1.23.25-alpha-202508252126
+    ORGANIZATION https://dev.azure.com/WSSI/
+    PROJECT COMPUTE
+    SCOPE project
+    FEED WCR
+    PATH __dependencies
+    OUTPUT_VAR ORT_ROOT
+  )
+
+  # Extract the ORT headers, libs and dll required for build.
+  message(STATUS "ORT_ROOT: ${ORT_ROOT}")
+  message(STATUS "Building with WinML support")
+
+  if(ORT_HOME)
+    message(STATUS "WARNING: ORT_HOME will be overridden with USE_WINML=ON")
+  endif()
+
+  set(ORT_HOME "${CMAKE_CURRENT_SOURCE_DIR}/ort")
+  file(MAKE_DIRECTORY "${ORT_HOME}/lib")
+  file(MAKE_DIRECTORY "${ORT_HOME}/include")
+
+  file (GLOB ORT_HEADERS_1 CONFIGURE_DEPENDS "${ORT_ROOT}/include/onnxruntime/core/session/*.h")
+  file (GLOB ORT_HEADERS_2 CONFIGURE_DEPENDS "${ORT_ROOT}/include/onnxruntime/core/providers/dml/*.h")
+
+  file(COPY ${ORT_HEADERS_1} DESTINATION "${ORT_HOME}/include")
+  file(COPY ${ORT_HEADERS_2} DESTINATION "${ORT_HOME}/include")
+
+  file (GLOB ORT_LIBS_1 CONFIGURE_DEPENDS "${ORT_ROOT}/lib/${ORT_PLATFORM}/${ORT_FLAVOR}/onnxruntime.*")
+  file (GLOB ORT_LIBS_2 CONFIGURE_DEPENDS "${ORT_ROOT}/bin/${ORT_PLATFORM}/${ORT_FLAVOR}/onnxruntime.*")
+
+  file(COPY ${ORT_LIBS_1} DESTINATION "${ORT_HOME}/lib")
+  file(COPY ${ORT_LIBS_2} DESTINATION "${ORT_HOME}/lib")
+
+  message(STATUS "USE_WINML: ORT_HOME set to: ${ORT_HOME}")
+endif()
+
 if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LESS 11)
   message(FATAL_ERROR  "GCC version must be greater than or equal to 11")
 endif()
@@ -155,6 +222,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Android" OR CMAKE_SYSTEM_NAME STREQUAL "Linux" OR
   add_compile_definitions(_ORT_GENAI_USE_DLOPEN)
 else()
   target_link_libraries(onnxruntime-genai PRIVATE ${ONNXRUNTIME_LIB})
+  if(USE_WINML)
+    target_link_options(onnxruntime-genai PRIVATE "/DELAYLOAD:${ONNXRUNTIME_LIB}")
+  endif()
 endif()
 
 if(APPLE)
